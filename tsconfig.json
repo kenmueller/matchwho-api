@@ -1,11 +1,12 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
+		"target": "es2017",
+		"outDir": "build",
 		"noImplicitReturns": true,
 		"noUnusedLocals": true,
 		"sourceMap": true,
 		"strict": true,
-		"target": "es2017",
 		"incremental": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true

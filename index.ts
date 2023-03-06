@@ -1,9 +1,17 @@
-import express from 'express'
+import { app, server } from './root'
+import PORT from './port'
+import createGame from './game/create'
+import gameExists from './game/exists'
+import gameMeta from './game/meta'
+import './game/stream'
 
-const app = express()
+app.set('trust proxy', 1)
+app.disable('x-powered-by')
 
-app.get('/', (_req, res) => {
-	res.send('Match Who')
+app.use(createGame)
+app.use(gameExists)
+app.use(gameMeta)
+
+server.listen(PORT, () => {
+	console.log(`Listening on http://localhost:${PORT}`)
 })
-
-app.listen(process.env.PORT || '3000')
