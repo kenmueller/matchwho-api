@@ -1,0 +1,18 @@
+{
+	"name": "matchwho",
+	"version": "1.0.0",
+	"scripts": {
+		"dev": "nodemon",
+		"build": "tsc",
+		"start": "node build"
+	},
+	"dependencies": {
+		"express": "^4.18.2",
+		"ts-node": "^10.9.1"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.17",
+		"nodemon": "^2.0.21"
+	},
+	"private": true
+}
