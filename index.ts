@@ -1,5 +1,5 @@
-import { app, server } from './root'
-import PORT from './port'
+import { app, server } from './lib/root'
+import PORT from './lib/port'
 import createGame from './game/create'
 import gameExists from './game/exists'
 import gameMeta from './game/meta'

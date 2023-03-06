@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import sendError from './error/send'
+import sendError from '../error/send'
 
 const router = Router()
 

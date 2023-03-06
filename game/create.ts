@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import rateLimit from '../rate'
+import rateLimit from '../lib/rate'
 import sendError from '../error/send'
 import Game from '.'
 

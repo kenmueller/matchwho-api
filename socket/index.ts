@@ -3,7 +3,7 @@ import { IncomingMessage } from 'http'
 import { Socket } from 'net'
 import Pattern from 'url-pattern'
 
-import { server } from '../root'
+import { server } from '../lib/root'
 import HttpError from '../error/http'
 import ErrorCode from '../error/code'
 
