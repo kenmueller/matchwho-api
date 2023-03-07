@@ -14,7 +14,7 @@ router.get('/games/:code/exists', async (req, res) => {
 		if (!Game.validCode(code))
 			throw new HttpError(ErrorCode.BadRequest, 'Invalid game code')
 
-		res.send(await Game.exists(code))
+		res.send(Game.exists(code))
 	} catch (error) {
 		sendError(res, error)
 	}
