@@ -2,9 +2,6 @@ import Game from '..'
 
 type ServerGameData =
 	/** The current game data. */
-	| { key: 'game'; value: Game }
-
-	/** The next game code. Transition immediately. */
-	| { key: 'next'; value: string }
+	{ key: 'game'; value: Game }
 
 export default ServerGameData
