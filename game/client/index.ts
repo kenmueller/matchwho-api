@@ -7,6 +7,8 @@ import Self from './player/self'
 export default interface Game {
 	code: string
 
+	leaderName: string
+
 	state: GameState
 	round: number
 

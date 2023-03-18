@@ -55,6 +55,8 @@ export default class Game {
 		questions: []
 	}
 
+	leaderName: string | null = null
+
 	constructor() {
 		Game.games[this.code] = this
 	}
@@ -135,6 +137,9 @@ export default class Game {
 			points: 0,
 			answer: null
 		}
+
+		if (!player.spectating && !this.leaderName)
+			this.leaderName = player.name
 
 		this.listOf(player).push(player)
 		player.spectating ? this.sendGame(player) : this.sendGame()
@@ -244,7 +249,16 @@ export default class Game {
 	}
 
 	sendGame = (...destinations: Player[]) => {
-		const { code, state, round, leader: gameLeader, current } = this
+		const {
+			code,
+			leaderName,
+			state,
+			round,
+			leader: gameLeader,
+			current
+		} = this
+
+		if (!leaderName) return
 
 		const turn: GameTurn = current && {
 			...this.turn,
@@ -266,6 +280,7 @@ export default class Game {
 				key: 'game',
 				value: {
 					code,
+					leaderName,
 					state,
 					round,
 					turn,
