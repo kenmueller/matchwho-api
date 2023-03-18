@@ -109,7 +109,7 @@ export default class Game {
 	}
 
 	/** Includes only the top players. */
-	get slimResults(): GameResults {
+	get topResults(): GameResults {
 		return {
 			...this.results,
 			players: this.results.players?.slice(0, TOP_PLAYERS) ?? null
@@ -251,7 +251,7 @@ export default class Game {
 		}
 
 		const results =
-			this.state === GameState.Completed ? this.slimResults : null
+			this.state === GameState.Completed ? this.topResults : null
 
 		const leader = gameLeader && dataFromPlayer(gameLeader)
 		const players = this.players.map(dataFromPlayer)
