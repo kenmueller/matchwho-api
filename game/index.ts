@@ -27,6 +27,7 @@ import onUnmatch from './message/unmatch'
 import onMatched from './message/matched'
 import onDone from './message/done'
 import onNext from './message/next'
+import saveGame from './save'
 
 export default class Game {
 	static games: Record<string, Game> = {}
@@ -210,6 +211,8 @@ export default class Game {
 		this.results.players = [...this.players]
 			.sort((a, b) => b.points - a.points)
 			.map(dataFromPlayer)
+
+		saveGame(this).catch(console.error)
 	}
 
 	onMessage = (player: Player, message: ClientGameData) => {
