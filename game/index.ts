@@ -167,11 +167,12 @@ export default class Game {
 				}
 
 				break
-			case GameState.Completed:
-				if (this.players.length || this.spectators.length) break
-
-				delete Game.games[this.code]
-				return
+			// Don't delete game after the last player has left in order to redirect players who joined the old game code to the new game
+			// case GameState.Completed:
+			// 	if (this.players.length || this.spectators.length) break
+			//
+			// 	delete Game.games[this.code]
+			// 	return
 		}
 
 		this.sendGame()
