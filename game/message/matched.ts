@@ -3,6 +3,7 @@ import ErrorCode from '../../error/code'
 import Game from '..'
 import Player from '../player'
 import GameTurnState from '../client/turn/state'
+import CorrectGameTurn from '../client/turn/correct'
 
 const onMatched = (game: Game, player: Player) => {
 	const { current } = game
@@ -47,17 +48,21 @@ const onMatched = (game: Game, player: Player) => {
 				count + (answers[matches[id]] === answer ? 1 : 0),
 			0
 		),
-		matches: notCurrent.reduce<Record<string, number>>(
-			(matches, { id, answer }) => {
-				if (!answer) return matches
+		matches: notCurrent.reduce<CorrectGameTurn['matches']>(
+			(correctMatches, { id, answer }) => {
+				if (!answer) return correctMatches
 
 				const index = answers.indexOf(answer, nextAnswer[answer])
-				if (index < 0) return matches
+				if (index < 0) return correctMatches
 
-				matches[id] = index
+				correctMatches[id] = {
+					answer: index,
+					correct: answers[matches[id]] === answer
+				}
+
 				nextAnswer[answer] = index + 1
 
-				return matches
+				return correctMatches
 			},
 			{}
 		)
