@@ -1,23 +1,27 @@
-import socket from '../socket'
+import { io } from '../lib/root'
 import HttpError from '../error/http'
 import ErrorCode from '../error/code'
-import keepAlive from '../socket/keepAlive'
-import closeWithError from '../error/close'
 import CODE_LENGTH from './client/code'
 import Game from '.'
 import ClientGameData from './client/data/client'
 
-socket('/games/:code', (socket, req) => {
-	const { code } = req.params
+const namespaceMatch = new RegExp(`^\\/games\\/(.{${CODE_LENGTH}})/stream$`)
 
+io.of(namespaceMatch).on('connection', socket => {
 	try {
-		const name = req.query.get('name')?.trim() ?? ''
+		const code = socket.nsp.name.match(namespaceMatch)?.[1]
 
-		if (!Game.validCode(code))
+		if (!(code && Game.validCode(code)))
 			throw new HttpError(
 				ErrorCode.Socket,
 				`Game codes must be ${CODE_LENGTH} characters`
 			)
+
+		const rawName = socket.handshake.query.name
+		const rawNameString =
+			typeof rawName === 'string' ? rawName : rawName?.[0]
+
+		const name = rawNameString?.trim() ?? ''
 
 		const game = Game.withCode(code)
 
@@ -26,9 +30,7 @@ socket('/games/:code', (socket, req) => {
 
 		const player = game.join(socket, name)
 
-		keepAlive(socket)
-
-		socket.on('message', (data, isBinary) => {
+		socket.on('message', (message: ClientGameData) => {
 			try {
 				if (player.spectating)
 					throw new HttpError(
@@ -36,27 +38,23 @@ socket('/games/:code', (socket, req) => {
 						'You cannot interact with the game while spectating'
 					)
 
-				const message = JSON.parse(
-					data.toString(isBinary ? 'binary' : 'utf8')
-				) as ClientGameData | null
-
 				if (!(message && typeof message.key === 'string'))
 					throw new HttpError(ErrorCode.Socket, 'Invalid data')
 
 				game.onMessage(player, message)
-			} catch (error) {
-				closeWithError(socket, error)
+			} catch {
+				socket.disconnect()
 			}
 		})
 
-		socket.on('close', () => {
+		socket.on('disconnect', () => {
 			try {
 				game.leave(player)
 			} catch (error) {
 				console.error(error)
 			}
 		})
-	} catch (error) {
-		closeWithError(socket, error)
+	} catch {
+		socket.disconnect()
 	}
 })

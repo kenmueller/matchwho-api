@@ -1,9 +1,8 @@
-import WebSocket from 'ws'
+import { Socket } from 'socket.io'
 import { nanoid } from 'nanoid'
 import shuffle from 'shuffle-array'
 
 import CODE_LENGTH from './client/code'
-import ID_LENGTH from './client/id'
 import ROUNDS from './client/rounds'
 import TOP_PLAYERS from './client/player/top'
 import { MIN_PLAYERS, MAX_PLAYERS } from './client/player/bounds'
@@ -122,7 +121,7 @@ export default class Game {
 	listOf = (player: Player) =>
 		this[player.spectating ? 'spectators' : 'players']
 
-	join = (socket: WebSocket, name: string) => {
+	join = (socket: Socket, name: string) => {
 		if (name.length > MAX_NAME_LENGTH)
 			throw new HttpError(ErrorCode.Socket, 'Your name is too long')
 
@@ -133,7 +132,7 @@ export default class Game {
 				this.state === GameState.Joining &&
 				name
 			),
-			id: nanoid(ID_LENGTH),
+			id: socket.id,
 			name,
 			points: 0,
 			answer: null
@@ -294,7 +293,7 @@ export default class Game {
 				}
 			}
 
-			player.socket.send(JSON.stringify(data))
+			player.socket.emit('message', data)
 		}
 	}
 }

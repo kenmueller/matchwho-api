@@ -1,10 +1,10 @@
-import WebSocket from 'ws'
+import { Socket } from 'socket.io'
 
 import PlayerData from './client/player'
 import Self from './client/player/self'
 
 export default interface Player {
-	socket: WebSocket
+	socket: Socket
 	spectating: boolean
 	id: string
 	name: string
